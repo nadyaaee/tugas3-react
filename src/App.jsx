@@ -3,15 +3,35 @@ import './App.css'
 import Header from './components/Header'
 import ProductList from './components/ProductList'
 import SearchBar from './components/SearchBar'
+import ProductModal from './components/ProductModal'
 import productsData from './data/products'
 
 function App() {
-  const [products] = useState(productsData)
+  const [products, setProducts] = useState(productsData)
   const [searchTerm, setSearchTerm] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
+
+  function handleAddProduct() {
+    setIsModalOpen(true)
+  }
+
+  function handleSubmitProduct(newProduct) {
+    const productWithId = {
+      ...newProduct,
+      id: Date.now(),
+    }
+
+    setProducts((currentProducts) => [
+      ...currentProducts,
+      productWithId,
+    ])
+
+    setIsModalOpen(false)
+  }
 
   function handleEdit(product) {
     console.log('Edit produk:', product)
@@ -23,7 +43,7 @@ function App() {
 
   return (
     <div className="app">
-      <Header />
+      <Header onAddProduct={handleAddProduct} />
 
       <main className="main-content">
         <div className="section-heading">
@@ -48,6 +68,12 @@ function App() {
           onDelete={handleDelete}
         />
       </main>
+
+      <ProductModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleSubmitProduct}
+      />
     </div>
   )
 }
