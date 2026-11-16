@@ -2,10 +2,16 @@ import { useState } from 'react'
 import './App.css'
 import Header from './components/Header'
 import ProductList from './components/ProductList'
+import SearchBar from './components/SearchBar'
 import productsData from './data/products'
 
 function App() {
   const [products] = useState(productsData)
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
   function handleEdit(product) {
     console.log('Edit produk:', product)
@@ -27,12 +33,17 @@ function App() {
           </div>
 
           <span className="product-count">
-            {products.length} Produk
+            {filteredProducts.length} Produk
           </span>
         </div>
 
+        <SearchBar
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+        />
+
         <ProductList
-          products={products}
+          products={filteredProducts}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />
