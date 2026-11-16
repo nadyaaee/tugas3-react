@@ -53,3 +53,14 @@
 .btn-delete-confirm:hover {
   background: #b91c1c;
 }
+
+@media (max-width: 480px) {
+  .delete-modal-content .modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .delete-modal-content .btn-cancel,
+  .delete-modal-content .btn-delete-confirm {
+    width: 100%;
+  }
+}

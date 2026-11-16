@@ -5,12 +5,17 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f8f9fc;
-  color: #17213c;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f8fafc;
+  color: #1e293b;
 }
 
 button,
-input {
+input,
+textarea {
   font-family: inherit;
+}
+
+button {
+  cursor: pointer;
 }

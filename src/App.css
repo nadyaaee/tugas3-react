@@ -32,11 +32,12 @@
 
 .product-count {
   padding: 8px 14px;
-  background-color: #eff6ff;
+  background: #eff6ff;
   color: #2563eb;
   border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 @media (max-width: 600px) {
@@ -46,5 +47,9 @@
 
   .section-heading {
     align-items: flex-start;
+  }
+
+  .section-heading h2 {
+    font-size: 19px;
   }
 }

@@ -110,3 +110,20 @@
 .btn-submit:hover {
   background: #1d4ed8;
 }
+
+@media (max-width: 480px) {
+  .modal-content,
+  .delete-modal-content {
+    padding: 22px 18px;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn-cancel,
+  .btn-submit,
+  .btn-delete-confirm {
+    width: 100%;
+  }
+}
