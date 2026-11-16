@@ -1,6 +1,6 @@
 import './Header.css'
 
-function Header() {
+function Header({ onAddProduct }) {
   return (
     <header className="header">
       <div className="header-content">
@@ -9,7 +9,7 @@ function Header() {
           <p>Kelola daftar produk dan harga dalam satu tempat.</p>
         </div>
 
-        <button className="btn-add">
+        <button className="btn-add" onClick={onAddProduct}>
           + Tambah Produk
         </button>
       </div>
