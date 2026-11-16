@@ -10,31 +10,50 @@ function App() {
   const [products, setProducts] = useState(productsData)
   const [searchTerm, setSearchTerm] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingProduct, setEditingProduct] = useState(null)
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   function handleAddProduct() {
+    setEditingProduct(null)
     setIsModalOpen(true)
   }
 
-  function handleSubmitProduct(newProduct) {
-    const productWithId = {
-      ...newProduct,
-      id: Date.now(),
-    }
-
-    setProducts((currentProducts) => [
-      ...currentProducts,
-      productWithId,
-    ])
-
-    setIsModalOpen(false)
+  function handleEdit(product) {
+    setEditingProduct(product)
+    setIsModalOpen(true)
   }
 
-  function handleEdit(product) {
-    console.log('Edit produk:', product)
+  function handleSubmitProduct(productData) {
+    if (editingProduct) {
+      setProducts((currentProducts) =>
+        currentProducts.map((product) =>
+          product.id === editingProduct.id
+            ? { ...product, ...productData }
+            : product
+        )
+      )
+    } else {
+      const newProduct = {
+        ...productData,
+        id: Date.now(),
+      }
+
+      setProducts((currentProducts) => [
+        ...currentProducts,
+        newProduct,
+      ])
+    }
+
+    setIsModalOpen(false)
+    setEditingProduct(null)
+  }
+
+  function handleCloseModal() {
+    setIsModalOpen(false)
+    setEditingProduct(null)
   }
 
   function handleDelete(product) {
@@ -71,8 +90,9 @@ function App() {
 
       <ProductModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         onSubmit={handleSubmitProduct}
+        editingProduct={editingProduct}
       />
     </div>
   )
