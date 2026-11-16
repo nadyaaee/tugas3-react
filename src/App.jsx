@@ -4,6 +4,7 @@ import Header from './components/Header'
 import ProductList from './components/ProductList'
 import SearchBar from './components/SearchBar'
 import ProductModal from './components/ProductModal'
+import DeleteModal from './components/DeleteModal'
 import productsData from './data/products'
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState(null)
+  const [deletingProduct, setDeletingProduct] = useState(null)
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -57,7 +59,17 @@ function App() {
   }
 
   function handleDelete(product) {
-    console.log('Hapus produk:', product)
+    setDeletingProduct(product)
+  }
+
+  function handleConfirmDelete() {
+    setProducts((currentProducts) =>
+      currentProducts.filter(
+        (product) => product.id !== deletingProduct.id
+      )
+    )
+
+    setDeletingProduct(null)
   }
 
   return (
@@ -93,6 +105,13 @@ function App() {
         onClose={handleCloseModal}
         onSubmit={handleSubmitProduct}
         editingProduct={editingProduct}
+      />
+
+      <DeleteModal
+        isOpen={Boolean(deletingProduct)}
+        product={deletingProduct}
+        onClose={() => setDeletingProduct(null)}
+        onConfirm={handleConfirmDelete}
       />
     </div>
   )
