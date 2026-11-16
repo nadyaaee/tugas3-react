@@ -1,24 +1,52 @@
-﻿import './ProductModal.css'
+﻿import { useEffect, useState } from 'react'
+import './ProductModal.css'
 
-function ProductModal({ isOpen, onClose, onSubmit }) {
+function ProductModal({ isOpen, onClose, onSubmit, editingProduct }) {
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    price: '',
+    image: '',
+  })
+
+  useEffect(() => {
+    if (editingProduct) {
+      setFormData({
+        name: editingProduct.name,
+        description: editingProduct.description,
+        price: editingProduct.price,
+        image: editingProduct.image,
+      })
+    } else {
+      setFormData({
+        name: '',
+        description: '',
+        price: '',
+        image: '',
+      })
+    }
+  }, [editingProduct, isOpen])
+
   if (!isOpen) {
     return null
+  }
+
+  function handleChange(event) {
+    const { name, value } = event.target
+
+    setFormData((currentData) => ({
+      ...currentData,
+      [name]: value,
+    }))
   }
 
   function handleSubmit(event) {
     event.preventDefault()
 
-    const formData = new FormData(event.target)
-
-    const newProduct = {
-      name: formData.get('name'),
-      description: formData.get('description'),
-      price: Number(formData.get('price')),
-      image: formData.get('image'),
-    }
-
-    onSubmit(newProduct)
-    event.target.reset()
+    onSubmit({
+      ...formData,
+      price: Number(formData.price),
+    })
   }
 
   return (
@@ -29,8 +57,12 @@ function ProductModal({ isOpen, onClose, onSubmit }) {
       >
         <div className="modal-header">
           <div>
-            <h2>Tambah Produk</h2>
-            <p>Masukkan informasi produk baru.</p>
+            <h2>{editingProduct ? 'Edit Produk' : 'Tambah Produk'}</h2>
+            <p>
+              {editingProduct
+                ? 'Perbarui informasi produk.'
+                : 'Masukkan informasi produk baru.'}
+            </p>
           </div>
 
           <button
@@ -49,6 +81,8 @@ function ProductModal({ isOpen, onClose, onSubmit }) {
               type="text"
               name="name"
               placeholder="Masukkan nama produk"
+              value={formData.name}
+              onChange={handleChange}
               required
             />
           </div>
@@ -58,6 +92,8 @@ function ProductModal({ isOpen, onClose, onSubmit }) {
             <textarea
               name="description"
               placeholder="Masukkan deskripsi produk"
+              value={formData.description}
+              onChange={handleChange}
               required
             />
           </div>
@@ -69,6 +105,8 @@ function ProductModal({ isOpen, onClose, onSubmit }) {
               name="price"
               placeholder="Masukkan harga produk"
               min="1"
+              value={formData.price}
+              onChange={handleChange}
               required
             />
           </div>
@@ -79,6 +117,8 @@ function ProductModal({ isOpen, onClose, onSubmit }) {
               type="url"
               name="image"
               placeholder="https://example.com/image.jpg"
+              value={formData.image}
+              onChange={handleChange}
               required
             />
           </div>
@@ -93,7 +133,7 @@ function ProductModal({ isOpen, onClose, onSubmit }) {
             </button>
 
             <button type="submit" className="btn-submit">
-              Tambah Produk
+              {editingProduct ? 'Simpan Perubahan' : 'Tambah Produk'}
             </button>
           </div>
         </form>
