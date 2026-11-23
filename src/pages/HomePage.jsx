@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import '../App.css'
 
-import Header from '../components/Header'
-import ProductList from '../components/ProductList'
-import SearchBar from '../components/SearchBar'
-import ProductModal from '../components/ProductModal'
-import DeleteModal from '../components/DeleteModal'
+import Header from '../organisms/Header'
+import ProductList from '../organisms/ProductList'
+import SearchBar from '../molecules/SearchBar'
+import ProductModal from '../organisms/ProductModal'
+import DeleteModal from '../organisms/DeleteModal'
 
 import {
   getProducts,
