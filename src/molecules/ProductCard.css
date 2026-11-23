@@ -1,67 +1,170 @@
+/* ==========================================================
+   Product Card
+   Struktur yang diharapkan:
+
+   <div class="product-card">
+     <Link class="product-detail-link">
+       <div class="product-image"><img /></div>
+       <div class="product-info">
+         <h3>Nama</h3>
+         <p>Deskripsi</p>
+         <span class="product-price">Rp 350.000</span>
+       </div>
+     </Link>
+     <div class="product-actions">
+       <Link class="btn-detail">Detail</Link>
+       <Link class="btn-edit">Edit</Link>
+       <button class="btn-delete">Hapus</button>
+     </div>
+   </div>
+   ========================================================== */
+
+:root {
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+  --text-title: #0f172a;
+  --text-body: #64748b;
+  --price: #2563eb;
+  --img-bg: #f1f5f9;
+  --radius-card: 14px;
+  --radius-btn: 8px;
+}
+
+/* ---------- Card (Grid View / default) ---------- */
 .product-card {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
   overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transform: translateY(-3px);
+  border-color: #d5dae1;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
 }
 
+/* ---------- Link pembungkus gambar + info ---------- */
+.product-detail-link {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Hover cukup mengubah warna judul, bukan underline seluruh teks */
+.product-detail-link:hover h3 {
+  color: var(--price);
+}
+
+.product-detail-link:focus-visible,
+.product-actions button:focus-visible,
+.product-actions a:focus-visible {
+  outline: 2px solid var(--price);
+  outline-offset: 2px;
+}
+
+/* ---------- Gambar ---------- */
 .product-image {
   width: 100%;
   height: 190px;
-  background-color: #f1f5f9;
+  flex-shrink: 0;
+  background-color: var(--img-bg);
+  overflow: hidden;
 }
 
 .product-image img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
+/* ---------- Info ---------- */
 .product-info {
-  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  padding: 16px 16px 4px;
 }
 
 .product-info h3 {
-  font-size: 18px;
-  color: #1e293b;
-  margin-bottom: 8px;
+  margin: 0 0 6px;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text-title);
+  transition: color 0.15s ease;
+  /* maksimal 2 baris */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .product-info p {
-  font-size: 13px;
-  color: #64748b;
-  line-height: 1.5;
+  margin: 0;
   min-height: 40px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-body);
+  /* maksimal 2 baris supaya tinggi card seragam */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .product-price {
   display: block;
-  margin-top: 14px;
-  font-size: 17px;
-  font-weight: 700;
-  color: #2563eb;
+  margin-top: auto;
+  padding-top: 12px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--price);
+  white-space: nowrap;
 }
 
+/* ---------- Tombol aksi ---------- */
 .product-actions {
   display: flex;
-  gap: 10px;
-  padding: 0 16px 16px;
+  gap: 8px;
+  padding: 12px 16px 16px;
 }
 
-.product-actions button {
+.product-actions button,
+.product-actions a {
   flex: 1;
-  padding: 9px;
+  padding: 9px 10px;
   border: none;
-  border-radius: 7px;
+  border-radius: var(--radius-btn);
+  font-family: inherit;
   font-size: 13px;
   font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
   cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-detail {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+.btn-detail:hover {
+  background-color: #e2e8f0;
 }
 
 .btn-edit {
@@ -82,11 +185,112 @@
   background-color: #fee2e2;
 }
 
-.product-detail-link {
-  color: inherit;
-  text-decoration: none;
+/* ==========================================================
+   List View
+   Gambar + info di kiri (fleksibel), tombol di kanan (tetap)
+   ========================================================== */
+.list-view .product-card {
+  flex-direction: row;
+  align-items: stretch;
 }
 
-.product-detail-link:hover {
-  text-decoration: underline;
+.list-view .product-card:hover {
+  transform: none; /* di list view cukup shadow saja */
+}
+
+.list-view .product-detail-link {
+  flex-direction: row;
+  align-items: stretch;
+  flex: 1;
+  min-width: 0;
+}
+
+.list-view .product-image {
+  width: 180px;
+  height: auto;
+  min-height: 150px;
+}
+
+.list-view .product-info {
+  justify-content: center;
+  padding: 18px 20px;
+}
+
+.list-view .product-info p {
+  min-height: auto;
+  max-width: 70ch;
+}
+
+.list-view .product-price {
+  margin-top: 10px;
+  padding-top: 0;
+}
+
+.list-view .product-actions {
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 150px;
+  padding: 16px 20px 16px 0;
+}
+
+.list-view .product-actions button,
+.list-view .product-actions a {
+  flex: none;
+}
+
+/* ---------- Tablet & Mobile ---------- */
+@media (max-width: 720px) {
+  .list-view .product-card {
+    flex-direction: column;
+  }
+
+  .list-view .product-detail-link {
+    flex-direction: row;
+  }
+
+  .list-view .product-image {
+    width: 120px;
+    min-height: 120px;
+  }
+
+  .list-view .product-info {
+    padding: 14px;
+  }
+
+  .list-view .product-actions {
+    flex-direction: row;
+    width: auto;
+    padding: 0 14px 14px;
+  }
+
+  .list-view .product-actions button,
+  .list-view .product-actions a {
+    flex: 1;
+  }
+}
+
+@media (max-width: 420px) {
+  .list-view .product-detail-link {
+    flex-direction: column;
+  }
+
+  .list-view .product-image {
+    width: 100%;
+    height: 180px;
+  }
+}
+
+/* ---------- Hormati preferensi pengguna ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .product-card,
+  .product-info h3,
+  .product-actions button,
+  .product-actions a {
+    transition: none;
+  }
+
+  .product-card:hover {
+    transform: none;
+  }
 }
