@@ -2,6 +2,7 @@
 import Button from '../atoms/Button'
 import Input from '../atoms/Input'
 import './ProductModal.css'
+import Textarea from '../atoms/Textarea'
 
 function ProductModal({ isOpen, onClose, onSubmit, editingProduct }) {
   const [formData, setFormData] = useState({
@@ -85,16 +86,14 @@ function ProductModal({ isOpen, onClose, onSubmit, editingProduct }) {
             required
           />
 
-          <div className="form-group">
-            <label>Deskripsi</label>
-            <textarea
-              name="description"
-              placeholder="Masukkan deskripsi produk"
-              value={formData.description}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          <Textarea
+            label="Deskripsi"
+            name="description"
+            placeholder="Masukkan deskripsi produk"
+            value={formData.description}
+            onChange={handleChange}
+            required
+          />
 
           <Input
             label="Harga"
