@@ -18,6 +18,7 @@ import {
 function HomePage() {
   const [products, setProducts] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
+  const [viewMode, setViewMode] = useState('grid')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState(null)
   const [deletingProduct, setDeletingProduct] = useState(null)
@@ -118,7 +119,11 @@ function HomePage() {
   
   return (
     <MainLayout
-      header={<Header onAddProduct={handleAddProduct} />}
+      header={<Header
+                onAddProduct={handleAddProduct}
+                viewMode={viewMode}
+                onViewModeChange={setViewMode}
+            />}
     >
       <div className="section-heading">
         <div>
@@ -147,9 +152,10 @@ function HomePage() {
 
       {!loading && !error && (
         <ProductList
-          products={filteredProducts}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
+            products={filteredProducts}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            viewMode={viewMode}
         />
       )}
 
