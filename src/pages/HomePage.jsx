@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import '../App.css'
 
 import Header from '../components/Header'
@@ -6,14 +6,41 @@ import ProductList from '../components/ProductList'
 import SearchBar from '../components/SearchBar'
 import ProductModal from '../components/ProductModal'
 import DeleteModal from '../components/DeleteModal'
-import productsData from '../data/products'
+
+import {
+  getProducts,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} from '../services/productService'
 
 function HomePage() {
-  const [products, setProducts] = useState(productsData)
+  const [products, setProducts] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState(null)
   const [deletingProduct, setDeletingProduct] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  // Mengambil data produk dari backend
+  async function fetchProducts() {
+    try {
+      setLoading(true)
+      setError('')
+
+      const data = await getProducts()
+      setProducts(data)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchProducts()
+  }, [])
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -29,29 +56,36 @@ function HomePage() {
     setIsModalOpen(true)
   }
 
-  function handleSubmitProduct(productData) {
-    if (editingProduct) {
-      setProducts((currentProducts) =>
-        currentProducts.map((product) =>
-          product.id === editingProduct.id
-            ? { ...product, ...productData }
-            : product
+  // Menambah atau mengedit produk
+  async function handleSubmitProduct(productData) {
+    try {
+      if (editingProduct) {
+        const updatedProduct = await updateProduct(
+          editingProduct.id,
+          productData
         )
-      )
-    } else {
-      const newProduct = {
-        ...productData,
-        id: Date.now(),
+
+        setProducts((currentProducts) =>
+          currentProducts.map((product) =>
+            product.id === editingProduct.id
+              ? updatedProduct
+              : product
+          )
+        )
+      } else {
+        const newProduct = await createProduct(productData)
+
+        setProducts((currentProducts) => [
+          ...currentProducts,
+          newProduct,
+        ])
       }
 
-      setProducts((currentProducts) => [
-        ...currentProducts,
-        newProduct,
-      ])
+      setIsModalOpen(false)
+      setEditingProduct(null)
+    } catch (err) {
+      alert(err.message)
     }
-
-    setIsModalOpen(false)
-    setEditingProduct(null)
   }
 
   function handleCloseModal() {
@@ -63,14 +97,21 @@ function HomePage() {
     setDeletingProduct(product)
   }
 
-  function handleConfirmDelete() {
-    setProducts((currentProducts) =>
-      currentProducts.filter(
-        (product) => product.id !== deletingProduct.id
-      )
-    )
+  // Menghapus produk dari backend
+  async function handleConfirmDelete() {
+    try {
+      await deleteProduct(deletingProduct.id)
 
-    setDeletingProduct(null)
+      setProducts((currentProducts) =>
+        currentProducts.filter(
+          (product) => product.id !== deletingProduct.id
+        )
+      )
+
+      setDeletingProduct(null)
+    } catch (err) {
+      alert(err.message)
+    }
   }
 
   return (
@@ -94,11 +135,31 @@ function HomePage() {
           onSearchChange={setSearchTerm}
         />
 
-        <ProductList
-          products={filteredProducts}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
+        {loading && <p>Memuat data produk...</p>}
+
+        {error && (
+          <div>
+            <p>{error}</p>
+            <button onClick={fetchProducts}>Coba Lagi</button>
+          </div>
+        )}
+
+        {!loading && !error && (
+          <ProductList
+            products={filteredProducts}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        )}
+
+        {!loading && !error && products.length === 0 && (
+          <p>Belum ada produk. Silakan tambahkan produk baru.</p>
+        )}
+
+        {!loading && !error && products.length > 0 &&
+          filteredProducts.length === 0 && (
+            <p>Produk tidak ditemukan.</p>
+          )}
       </main>
 
       <ProductModal
