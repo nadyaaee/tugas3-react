@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import '../App.css'
 
+import MainLayout from '../templates/MainLayout'
 import Header from '../organisms/Header'
 import ProductList from '../organisms/ProductList'
 import SearchBar from '../molecules/SearchBar'
@@ -114,53 +115,52 @@ function HomePage() {
     }
   }
 
+  
   return (
-    <div className="app">
-      <Header onAddProduct={handleAddProduct} />
-
-      <main className="main-content">
-        <div className="section-heading">
-          <div>
-            <h2>Daftar Produk</h2>
-            <p>Temukan dan kelola produk yang tersedia.</p>
-          </div>
-
-          <span className="product-count">
-            {filteredProducts.length} Produk
-          </span>
+    <MainLayout
+      header={<Header onAddProduct={handleAddProduct} />}
+    >
+      <div className="section-heading">
+        <div>
+          <h2>Daftar Produk</h2>
+          <p>Temukan dan kelola produk yang tersedia.</p>
         </div>
 
-        <SearchBar
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
+        <span className="product-count">
+          {filteredProducts.length} Produk
+        </span>
+      </div>
+
+      <SearchBar
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+      />
+
+      {loading && <p>Memuat data produk...</p>}
+
+      {error && (
+        <div>
+          <p>{error}</p>
+          <button onClick={fetchProducts}>Coba Lagi</button>
+        </div>
+      )}
+
+      {!loading && !error && (
+        <ProductList
+          products={filteredProducts}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
         />
+      )}
 
-        {loading && <p>Memuat data produk...</p>}
+      {!loading && !error && products.length === 0 && (
+        <p>Belum ada produk. Silakan tambahkan produk baru.</p>
+      )}
 
-        {error && (
-          <div>
-            <p>{error}</p>
-            <button onClick={fetchProducts}>Coba Lagi</button>
-          </div>
+      {!loading && !error && products.length > 0 &&
+        filteredProducts.length === 0 && (
+          <p>Produk tidak ditemukan.</p>
         )}
-
-        {!loading && !error && (
-          <ProductList
-            products={filteredProducts}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        )}
-
-        {!loading && !error && products.length === 0 && (
-          <p>Belum ada produk. Silakan tambahkan produk baru.</p>
-        )}
-
-        {!loading && !error && products.length > 0 &&
-          filteredProducts.length === 0 && (
-            <p>Produk tidak ditemukan.</p>
-          )}
-      </main>
 
       <ProductModal
         isOpen={isModalOpen}
@@ -175,7 +175,7 @@ function HomePage() {
         onClose={() => setDeletingProduct(null)}
         onConfirm={handleConfirmDelete}
       />
-    </div>
+    </MainLayout>
   )
 }
 
