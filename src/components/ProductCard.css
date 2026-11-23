@@ -81,3 +81,12 @@
 .btn-delete:hover {
   background-color: #fee2e2;
 }
+
+.product-detail-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.product-detail-link:hover {
+  text-decoration: underline;
+}

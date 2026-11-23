@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import './ProductCard.css'
 
 function ProductCard({ product, onEdit, onDelete }) {
@@ -8,10 +9,19 @@ function ProductCard({ product, onEdit, onDelete }) {
       </div>
 
       <div className="product-info">
-        <h3>{product.name}</h3>
+        <h3>
+          <Link
+            to={`/products/${product.id}`}
+            className="product-detail-link"
+          >
+            {product.name}
+          </Link>
+        </h3>
+
         <p>{product.description}</p>
+
         <span className="product-price">
-          Rp {product.price.toLocaleString('id-ID')}
+          Rp {Number(product.price).toLocaleString('id-ID')}
         </span>
       </div>
 
