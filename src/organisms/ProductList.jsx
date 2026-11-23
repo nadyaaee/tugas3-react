@@ -1,4 +1,4 @@
-import ProductCard from './ProductCard'
+import ProductCard from '../molecules/ProductCard'
 import './ProductList.css'
 
 function ProductList({ products, onEdit, onDelete }) {
