@@ -1,4 +1,5 @@
 ﻿import { useEffect, useState } from 'react'
+import Button from '../atoms/Button'
 import Input from '../atoms/Input'
 import './ProductModal.css'
 
@@ -66,13 +67,12 @@ function ProductModal({ isOpen, onClose, onSubmit, editingProduct }) {
             </p>
           </div>
 
-          <button
-            type="button"
+          <Button
             className="modal-close"
             onClick={onClose}
           >
             ×
-          </button>
+          </Button>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -118,17 +118,19 @@ function ProductModal({ isOpen, onClose, onSubmit, editingProduct }) {
           />
 
           <div className="modal-actions">
-            <button
-              type="button"
+            <Button
               className="btn-cancel"
               onClick={onClose}
             >
               Batal
-            </button>
+            </Button>
 
-            <button type="submit" className="btn-submit">
+            <Button
+              type="submit"
+              className="btn-submit"
+            >
               {editingProduct ? 'Simpan Perubahan' : 'Tambah Produk'}
-            </button>
+            </Button>
           </div>
         </form>
       </div>
