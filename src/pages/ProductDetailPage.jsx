@@ -39,44 +39,54 @@ function ProductDetailPage() {
   }, [id])
 
   if (loading) {
-    return <main className="main-content">Memuat detail produk...</main>
+    return (
+      <main className="detail-page">
+        <div className="detail-container">
+          <p>Memuat detail produk...</p>
+        </div>
+      </main>
+    )
   }
 
   if (error) {
     return (
-      <main className="main-content">
-        <h2>{error}</h2>
-        <Link to="/">Kembali ke daftar produk</Link>
+      <main className="detail-page">
+        <div className="detail-container">
+          <h1>{error}</h1>
+          <p>Produk dengan ID {id} tidak tersedia.</p>
+
+          <Link to="/" className="detail-back-button">
+            Kembali ke daftar produk
+          </Link>
+        </div>
       </main>
     )
   }
 
   return (
-    <main className="main-content">
-      <Link to="/">← Kembali ke daftar produk</Link>
+    <main className="detail-page">
+      <div className="detail-container">
+        <Link to="/" className="detail-back-link">
+          ← Kembali ke daftar produk
+        </Link>
 
-      <div className="product-detail">
         {product.image && (
           <img
             src={product.image}
             alt={product.name}
-            className="product-detail-image"
+            className="detail-image"
           />
         )}
 
-        <div>
-          <h1>{product.name}</h1>
+        <h1 className="detail-title">{product.name}</h1>
 
-          <h2>
-            Rp {Number(product.price).toLocaleString('id-ID')}
-          </h2>
+        <p className="detail-description">
+          {product.description || 'Tidak ada deskripsi produk.'}
+        </p>
 
-          <p>
-            {product.description || 'Tidak ada deskripsi produk.'}
-          </p>
-
-          <p>ID Produk: {product.id}</p>
-        </div>
+        <p className="detail-price">
+          Rp {Number(product.price).toLocaleString('id-ID')}
+        </p>
       </div>
     </main>
   )
