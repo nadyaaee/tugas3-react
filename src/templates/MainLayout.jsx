@@ -1,8 +1,9 @@
 function MainLayout({ header, children }) {
   return (
-    <div className="app">
+    <div className="min-h-screen bg-slate-50">
       {header}
-      <main className="main-content">
+
+      <main className="w-full">
         {children}
       </main>
     </div>
