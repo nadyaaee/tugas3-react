@@ -1,4 +1,5 @@
 ﻿import { useEffect, useState } from 'react'
+import Input from '../atoms/Input'
 import './ProductModal.css'
 
 function ProductModal({ isOpen, onClose, onSubmit, editingProduct }) {
@@ -75,17 +76,14 @@ function ProductModal({ isOpen, onClose, onSubmit, editingProduct }) {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Nama Produk</label>
-            <input
-              type="text"
-              name="name"
-              placeholder="Masukkan nama produk"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          <Input
+            label="Nama Produk"
+            name="name"
+            placeholder="Masukkan nama produk"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
 
           <div className="form-group">
             <label>Deskripsi</label>
@@ -98,30 +96,26 @@ function ProductModal({ isOpen, onClose, onSubmit, editingProduct }) {
             />
           </div>
 
-          <div className="form-group">
-            <label>Harga</label>
-            <input
-              type="number"
-              name="price"
-              placeholder="Masukkan harga produk"
-              min="1"
-              value={formData.price}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          <Input
+            label="Harga"
+            type="number"
+            name="price"
+            placeholder="Masukkan harga produk"
+            min="1"
+            value={formData.price}
+            onChange={handleChange}
+            required
+          />
 
-          <div className="form-group">
-            <label>URL Gambar</label>
-            <input
-              type="url"
-              name="image"
-              placeholder="https://example.com/image.jpg"
-              value={formData.image}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          <Input
+            label="URL Gambar"
+            type="url"
+            name="image"
+            placeholder="https://example.com/image.jpg"
+            value={formData.image}
+            onChange={handleChange}
+            required
+          />
 
           <div className="modal-actions">
             <button
