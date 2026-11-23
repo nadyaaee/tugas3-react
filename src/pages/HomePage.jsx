@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import '../App.css'
 
 import MainLayout from '../templates/MainLayout'
 import Header from '../organisms/Header'
@@ -117,72 +116,158 @@ function HomePage() {
   }
 
   
-  return (
-    <MainLayout
-      header={<Header
-                onAddProduct={handleAddProduct}
-                viewMode={viewMode}
-                onViewModeChange={setViewMode}
-            />}
-    >
-      <div className="section-heading">
-        <div>
-          <h2>Daftar Produk</h2>
-          <p>Temukan dan kelola produk yang tersedia.</p>
-        </div>
-
-        <span className="product-count">
-          {filteredProducts.length} Produk
-        </span>
-      </div>
-
-      <SearchBar
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
+  
+return (
+  <MainLayout
+    header={
+      <Header
+        onAddProduct={handleAddProduct}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
       />
+    }
+  >
+    <section className="min-h-screen w-full bg-slate-50">
+      <div className="mx-auto w-full max-w-7xl px-6 py-10">
 
-      {loading && <p>Memuat data produk...</p>}
+        {/* Page Heading and Search */}
+        <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
 
-      {error && (
-        <div>
-          <p>{error}</p>
-          <button onClick={fetchProducts}>Coba Lagi</button>
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900">
+              Daftar Produk
+            </h2>
+
+            <p className="mt-2 text-base text-slate-500">
+              Temukan dan kelola produk yang tersedia.
+            </p>
+          </div>
+
+          {/* Search Bar */}
+          <div className="w-full md:max-w-md">
+            <SearchBar
+              value={searchTerm}
+              onChange={setSearchTerm}
+            />
+          </div>
+
         </div>
-      )}
 
-      {!loading && !error && (
-        <ProductList
-            products={filteredProducts}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            viewMode={viewMode}
-        />
-      )}
+        {/* Loading */}
+        {loading && (
+          <div className="flex min-h-[300px] flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-purple-100 border-t-purple-600" />
 
-      {!loading && !error && products.length === 0 && (
-        <p>Belum ada produk. Silakan tambahkan produk baru.</p>
-      )}
-
-      {!loading && !error && products.length > 0 &&
-        filteredProducts.length === 0 && (
-          <p>Produk tidak ditemukan.</p>
+            <p className="mt-4 text-sm font-medium text-slate-500">
+              Memuat produk...
+            </p>
+          </div>
         )}
 
-      <ProductModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        onSubmit={handleSubmitProduct}
-        editingProduct={editingProduct}
-      />
+        {/* Error */}
+        {!loading && error && (
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-6">
+            <h3 className="text-lg font-bold text-red-700">
+              Terjadi Kesalahan
+            </h3>
 
-      <DeleteModal
-        isOpen={Boolean(deletingProduct)}
-        product={deletingProduct}
-        onClose={() => setDeletingProduct(null)}
-        onConfirm={handleConfirmDelete}
-      />
-    </MainLayout>
-  )
+            <p className="mt-2 text-sm text-red-600">
+              {error}
+            </p>
+          </div>
+        )}
+
+        {/* Product List */}
+        {!loading && !error && filteredProducts.length > 0 && (
+          <>
+            <div className="mb-5 flex items-center justify-between">
+              <p className="text-sm text-slate-500">
+                Menampilkan{' '}
+                <span className="font-bold text-slate-800">
+                  {filteredProducts.length}
+                </span>{' '}
+                produk
+              </p>
+            </div>
+
+            <ProductList
+              products={filteredProducts}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              viewMode={viewMode}
+            />
+          </>
+        )}
+
+        {/* Empty State */}
+        {!loading && !error && filteredProducts.length === 0 && (
+          <div className="flex min-h-[350px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
+
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-purple-50">
+              <svg
+                className="h-10 w-10 text-purple-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  cx="11"
+                  cy="11"
+                  r="7"
+                  strokeWidth="2"
+                />
+                <path
+                  d="m16 16 4 4"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
+
+            <h3 className="mt-6 text-xl font-bold text-slate-800">
+              Produk Tidak Ditemukan
+            </h3>
+
+            <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
+              {searchTerm
+                ? `Tidak ada produk yang cocok dengan pencarian "${searchTerm}".`
+                : 'Belum ada produk yang tersedia.'}
+            </p>
+
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={() => setSearchTerm('')}
+                className="mt-6 rounded-xl bg-purple-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-purple-700"
+              >
+                Reset Pencarian
+              </button>
+            )}
+
+          </div>
+        )}
+
+        {/* Product Modal */}
+        <ProductModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onSubmit={handleSubmitProduct}
+          editingProduct={editingProduct}
+        />
+
+        {/* Delete Modal */}
+        <DeleteModal
+          isOpen={Boolean(deletingProduct)}
+          onClose={() => setDeletingProduct(null)}
+          onConfirm={handleConfirmDelete}
+          product={deletingProduct}
+        />
+
+      </div>
+    </section>
+  </MainLayout>
+)
+
 }
 
 export default HomePage
